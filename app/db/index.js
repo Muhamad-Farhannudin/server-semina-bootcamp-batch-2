@@ -1,14 +1,19 @@
-// (1) import package mongoose
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
-// (2) kita import konfigurasi terkait MongoDB dari app/config.js
 const { urlDb } = require('../config');
 
-// (3) connect ke MongoDB menggunakan konfigurasi yang telah kita import
 mongoose.connect(urlDb);
 
-// (4) simpan koneksi dalam constant db
 const db = mongoose.connection;
 
-// (5) export db supaya bisa digunakan oleh file lain yang membutuhkan
+// Event listener untuk menangkap event koneksi berhasil
+db.on('connected', () => {
+    console.log('Connected to MongoDB');
+});
+
+// Event listener untuk menangkap event koneksi gagal
+db.on('error', (err) => {
+    console.error('Error connecting to MongoDB:', err.message);
+});
+
 module.exports = db;
